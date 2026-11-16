@@ -1,238 +1,119 @@
-"""Authentic portfolio dataset and transit graph model for Dadiyala Lathish Gokul."""
+"""Portfolio data source and repository language composition calculator."""
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
+from typing import Any
+
 from python_app.models import (
-    CertificationRecord,
-    Profile,
-    ProjectSpec,
-    SemesterScore,
-    SkillArea,
+    CertificationEntry,
+    PortfolioDocument,
+    ProjectEntry,
+    SemesterEntry,
 )
 
-PORTFOLIO_PROFILE = Profile(
+PORTFOLIO_DATA = PortfolioDocument(
     name="Dadiyala Lathish Gokul",
-    headline=(
+    lead=(
         "Second-year B.Tech student in Computer Science and Engineering "
         "(AI & ML) at Jain University."
     ),
-    degree="B.Tech, Computer Science and Engineering (AI & ML)",
-    university="Jain University",
-    year_of_study="2nd Year",
     location="Tirupati, Andhra Pradesh",
     email="dadiyalalathishgokul@gmail.com",
     about=(
-        "I'm looking for a fresher role or internship where I can apply my "
+        "I’m looking for a fresher role or internship where I can apply my "
         "programming, data structures and algorithms, and project experience. "
         "I like solving problems, learning new things, and contributing to a team."
     ),
-    availability="Open to internships and entry-level software / AI & ML roles",
+    university="Jain University",
+    degree_summary="B.Tech, Computer Science and Engineering (AI & ML), currently in 2nd year",
     semesters=[
-        SemesterScore(
-            semester=1,
-            label="Semester 1",
-            sgpa=7.05,
-            max_scale=10.0,
-            credits=22,
-            focus="Foundational Programming, Engineering Mathematics, Problem Solving",
-        ),
-        SemesterScore(
-            semester=2,
-            label="Semester 2",
-            sgpa=7.862,
-            max_scale=10.0,
-            credits=22,
-            focus="Data Structures, Discrete Structures, Back-End & Database Foundations",
-        ),
+        SemesterEntry(label="Semester 1", cgpa=7.05, width_percent=70.5),
+        SemesterEntry(label="Semester 2", cgpa=7.862, width_percent=78.62),
     ],
     skills=[
-        SkillArea(
-            id="dsa",
-            title="Data structures and algorithms",
-            summary=(
-                "Strong foundation in arrays, linked structures, trees, graphs, "
-                "hashing, binary search, and dynamic programming applied in Python."
-            ),
-            python_focus="Implemented with clean time/space bounds using Python stdlib collections & heapq.",
-            code_example=(
-                "from collections import deque\n\n"
-                "def shortest_hop_route(graph: dict[str, list[str]], start: str, goal: str) -> list[str]:\n"
-                "    queue = deque([[start]])\n"
-                "    visited = {start}\n"
-                "    while queue:\n"
-                "        path = queue.popleft()\n"
-                "        if path[-1] == goal:\n"
-                "            return path\n"
-                "        for nxt in graph.get(path[-1], []):\n"
-                "            if nxt not in visited:\n"
-                "                visited.add(nxt)\n"
-                "                queue.append([*path, nxt])\n"
-                "    return []"
-            ),
-            tools=["Python 3.10", "Graph BFS / Dijkstra", "Dynamic Programming", "Hash Maps"],
-        ),
-        SkillArea(
-            id="backend-db",
-            title="Back-end and database development",
-            summary=(
-                "Designing REST endpoints, structured relational schemas, and "
-                "predictable query pipelines for student-facing applications."
-            ),
-            python_focus="Python HTTP services, SQLite3 relational storage, and typed dataclass validation.",
-            code_example=(
-                "import sqlite3\n\n"
-                "def fetch_next_departures(conn: sqlite3.Connection, stop_code: str) -> list[tuple]:\n"
-                "    query = (\n"
-                "        'SELECT route_id, departure_time, platform '\n"
-                "        'FROM bus_schedules WHERE stop_code = ? ORDER BY departure_time ASC'\n"
-                "    )\n"
-                "    return conn.execute(query, (stop_code,)).fetchall()"
-            ),
-            tools=["Python HTTP & APIs", "SQLite / SQL", "Schema Modeling", "REST JSON"],
-        ),
-        SkillArea(
-            id="ui-design",
-            title="User interface design and development",
-            summary=(
-                "Crafting accessible, clean, responsive interfaces with clear "
-                "typographic hierarchy and thoughtful interactive flows."
-            ),
-            python_focus="Served seamlessly over Python JSON APIs with real-time algorithmic feedback.",
-            code_example=(
-                "@dataclass(frozen=True)\n"
-                "class UiResponse:\n"
-                "    status: str\n"
-                "    payload: dict\n"
-                "    render_ms: float\n"
-            ),
-            tools=["TypeScript & React", "Tailwind CSS", "Responsive Design", "WCAG Accessibility"],
-        ),
+        "Data structures and algorithms",
+        "Back-end and database development",
+        "User interface design and development",
     ],
     projects=[
-        ProjectSpec(
-            id="jain-transit",
-            index_label="01. Jain Transit",
+        ProjectEntry(
             title="Jain Transit",
-            category="Smart Transportation · Back-End & Database",
-            summary=(
+            description=(
                 "A smart transportation website that helps students track college "
                 "buses, view live bus timings, and find important transit information "
                 "for easier travel."
             ),
             role="My role: designed and contributed to the back end and the database.",
-            image_path="/src/assets/images/project_jain_transit_1794852970957.jpg",
-            python_component="Live Python BFS & Dijkstra campus shuttle route solver",
-            highlights=[
-                "Structured bus route, stop sequence, and departure timetable schema",
-                "Fast stop-to-stop shortest transit lookup modeled in Python",
-                "Clear commuter schedule queries designed for daily campus rush hours",
-            ],
-            stack=["Python", "SQLite / Relational DB", "REST API", "Transit Routing"],
         ),
-        ProjectSpec(
-            id="wonderla-sentinel",
-            index_label="02. Wonderla Sentinel",
+        ProjectEntry(
             title="Wonderla Sentinel",
-            category="Experimental AI · Interactive Web Experience",
-            summary=(
-                "An interactive, AI-powered experimental website that explores "
-                "creative ideas, artificial intelligence, and new digital experiences."
+            description=(
+                "An interactive, AI-powered experimental website that explores creative "
+                "ideas, artificial intelligence, and new digital experiences."
             ),
             role=(
-                "My role: contributed to design and development, focusing on the "
-                "user interface, interactive features, and a user-friendly experience."
+                "My role: contributed to design and development, focusing on the user "
+                "interface, interactive features, and a user-friendly experience."
             ),
-            image_path="/src/assets/images/project_wonderla_sentinel_1794852971063.jpg",
-            python_component="Python-backed interactive scoring & narrative experiment state",
-            highlights=[
-                "Interactive AI-assisted creative exploration flow",
-                "Responsive layout and focused UI interactions for smooth discovery",
-                "Modular frontend architecture paired with structured JSON responses",
-            ],
-            stack=["AI Concepts", "Interactive UI", "Python API", "TypeScript"],
         ),
     ],
-    certifications=[
-        CertificationRecord(
-            id="dsa-cert-2025",
-            title="Data Structures and Algorithms (DSA) course and certificate",
-            period="1 May 2025 – 7 August 2025",
-            issuer="Verified DSA Training Program",
-            focus_topics=[
-                "Asymptotic Complexity (Big-O)",
-                "Arrays, Stacks, Queues & Linked Lists",
-                "Trees, Graphs & Shortest Path Traversals",
-                "Recursion & Dynamic Programming",
-            ],
-        )
-    ],
+    certification=CertificationEntry(
+        title="Data Structures and Algorithms (DSA) course and certificate",
+        period="1 May 2025 – 7 August 2025",
+    ),
+    contact_text="Open to internships and entry-level roles.",
 )
 
-# Campus transit graph used by both Jain Transit showcase and the Python DSA lab
-JAIN_TRANSIT_GRAPH: dict[str, list[tuple[str, int, str]]] = {
-    "Main Gate": [
-        ("Transit Terminal", 3, "Shuttle S1"),
-        ("Hostel Precinct", 5, "Shuttle S2"),
-    ],
-    "Transit Terminal": [
-        ("Main Gate", 3, "Shuttle S1"),
-        ("Central Library", 4, "Shuttle S1"),
-        ("Academic Block A", 6, "Express E1"),
-    ],
-    "Hostel Precinct": [
-        ("Main Gate", 5, "Shuttle S2"),
-        ("Sports Complex", 3, "Shuttle S2"),
-        ("Central Library", 4, "Campus Loop"),
-    ],
-    "Central Library": [
-        ("Transit Terminal", 4, "Shuttle S1"),
-        ("Hostel Precinct", 4, "Campus Loop"),
-        ("Academic Block A", 2, "Shuttle S1"),
-        ("AI & ML Lab", 5, "Tech Shuttle"),
-    ],
-    "Sports Complex": [
-        ("Hostel Precinct", 3, "Shuttle S2"),
-        ("AI & ML Lab", 6, "Campus Loop"),
-    ],
-    "Academic Block A": [
-        ("Transit Terminal", 6, "Express E1"),
-        ("Central Library", 2, "Shuttle S1"),
-        ("AI & ML Lab", 3, "Tech Shuttle"),
-    ],
-    "AI & ML Lab": [
-        ("Academic Block A", 3, "Tech Shuttle"),
-        ("Central Library", 5, "Tech Shuttle"),
-        ("Sports Complex", 6, "Campus Loop"),
-    ],
-}
 
-TRANSIT_DEPARTURES: dict[str, list[dict[str, str]]] = {
-    "Main Gate": [
-        {"route": "Shuttle S1", "next_bus": "08:15 AM", "destination": "Academic Block A", "status": "On Time"},
-        {"route": "Shuttle S2", "next_bus": "08:22 AM", "destination": "Hostel Precinct", "status": "Boarding"},
-    ],
-    "Transit Terminal": [
-        {"route": "Express E1", "next_bus": "08:18 AM", "destination": "Academic Block A", "status": "On Time"},
-        {"route": "Shuttle S1", "next_bus": "08:25 AM", "destination": "Central Library", "status": "On Time"},
-    ],
-    "Central Library": [
-        {"route": "Shuttle S1", "next_bus": "08:20 AM", "destination": "Academic Block A", "status": "Arriving"},
-        {"route": "Tech Shuttle", "next_bus": "08:28 AM", "destination": "AI & ML Lab", "status": "On Time"},
-    ],
-    "Academic Block A": [
-        {"route": "Tech Shuttle", "next_bus": "08:24 AM", "destination": "AI & ML Lab", "status": "On Time"},
-        {"route": "Express E1", "next_bus": "08:35 AM", "destination": "Transit Terminal", "status": "Scheduled"},
-    ],
-    "AI & ML Lab": [
-        {"route": "Tech Shuttle", "next_bus": "08:30 AM", "destination": "Central Library", "status": "On Time"},
-        {"route": "Campus Loop", "next_bus": "08:40 AM", "destination": "Sports Complex", "status": "Scheduled"},
-    ],
-    "Hostel Precinct": [
-        {"route": "Campus Loop", "next_bus": "08:12 AM", "destination": "Central Library", "status": "Boarding"},
-        {"route": "Shuttle S2", "next_bus": "08:25 AM", "destination": "Main Gate", "status": "On Time"},
-    ],
-    "Sports Complex": [
-        {"route": "Campus Loop", "next_bus": "08:19 AM", "destination": "AI & ML Lab", "status": "On Time"},
-        {"route": "Shuttle S2", "next_bus": "08:32 AM", "destination": "Hostel Precinct", "status": "Scheduled"},
-    ],
-}
+def compute_language_stats(root_dir: str | Path | None = None) -> dict[str, Any]:
+    """Compute exact source-byte language percentages across the repository."""
+    base = Path(root_dir or os.getcwd())
+    ext_map = {
+        ".py": "Python",
+        ".ts": "TypeScript",
+        ".tsx": "TypeScript",
+        ".css": "CSS",
+        ".html": "HTML",
+    }
+    ignored_dirs = {"node_modules", "dist", ".git", "__pycache__", ".aistudio"}
+    totals: dict[str, dict[str, int]] = {
+        lang: {"bytes": 0, "lines": 0, "files": 0}
+        for lang in ("Python", "TypeScript", "CSS", "HTML")
+    }
+
+    for current_root, dirs, files in os.walk(base):
+        dirs[:] = [d for d in dirs if d not in ignored_dirs and not d.startswith(".")]
+        for fname in files:
+            ext = Path(fname).suffix.lower()
+            lang = ext_map.get(ext)
+            if not lang:
+                continue
+            fpath = Path(current_root) / fname
+            try:
+                content = fpath.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            totals[lang]["bytes"] += len(content.encode("utf-8"))
+            totals[lang]["lines"] += len(content.splitlines())
+            totals[lang]["files"] += 1
+
+    total_bytes = sum(item["bytes"] for item in totals.values()) or 1
+    languages = [
+        {
+            "language": lang,
+            "bytes": stats["bytes"],
+            "lines": stats["lines"],
+            "files": stats["files"],
+            "percentage": round((stats["bytes"] / total_bytes) * 100.0, 1),
+        }
+        for lang, stats in totals.items()
+    ]
+    languages.sort(key=lambda entry: entry["bytes"], reverse=True)
+    python_pct = next((item["percentage"] for item in languages if item["language"] == "Python"), 0.0)
+    return {
+        "total_bytes": total_bytes,
+        "python_percentage": python_pct,
+        "languages": languages,
+    }

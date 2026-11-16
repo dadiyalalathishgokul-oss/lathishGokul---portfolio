@@ -1,4 +1,4 @@
-"""Typed domain models for the Python portfolio engine."""
+"""Typed dataclasses representing Dadiyala Lathish Gokul's portfolio."""
 
 from __future__ import annotations
 
@@ -7,119 +7,65 @@ from typing import Any
 
 
 @dataclass(frozen=True)
-class SemesterScore:
-    semester: int
+class SemesterEntry:
     label: str
-    sgpa: float
-    max_scale: float = 10.0
-    credits: int = 22
-    focus: str = ""
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass(frozen=True)
-class SkillArea:
-    id: str
-    title: str
-    summary: str
-    python_focus: str
-    code_example: str
-    tools: list[str] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass(frozen=True)
-class ProjectSpec:
-    id: str
-    index_label: str
-    title: str
-    category: str
-    summary: str
-    role: str
-    image_path: str
-    python_component: str
-    highlights: list[str] = field(default_factory=list)
-    stack: list[str] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass(frozen=True)
-class CertificationRecord:
-    id: str
-    title: str
-    period: str
-    issuer: str
-    focus_topics: list[str] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass(frozen=True)
-class Profile:
-    name: str
-    headline: str
-    degree: str
-    university: str
-    year_of_study: str
-    location: str
-    email: str
-    about: str
-    availability: str
-    semesters: list[SemesterScore]
-    skills: list[SkillArea]
-    projects: list[ProjectSpec]
-    certifications: list[CertificationRecord]
+    cgpa: float
+    width_percent: float
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "name": self.name,
-            "headline": self.headline,
-            "degree": self.degree,
-            "university": self.university,
-            "year_of_study": self.year_of_study,
-            "location": self.location,
-            "email": self.email,
-            "about": self.about,
-            "availability": self.availability,
-            "semesters": [s.to_dict() for s in self.semesters],
-            "skills": [sk.to_dict() for sk in self.skills],
-            "projects": [p.to_dict() for p in self.projects],
-            "certifications": [c.to_dict() for c in self.certifications],
+            "label": self.label,
+            "cgpa": self.cgpa,
+            "widthPercent": self.width_percent,
         }
 
 
 @dataclass(frozen=True)
-class AlgorithmRunResult:
-    algorithm_id: str
+class ProjectEntry:
     title: str
-    complexity_time: str
-    complexity_space: str
-    elapsed_microseconds: float
-    inputs: dict[str, Any]
-    output: Any
-    trace: list[str]
-    ast_summary: dict[str, int]
+    description: str
+    role: str
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
 @dataclass(frozen=True)
-class InquiryRecord:
-    id: int
-    sender_name: str
-    sender_email: str
-    organization: str
-    inquiry_type: str
-    message: str
-    created_at: str
+class CertificationEntry:
+    title: str
+    period: str
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+@dataclass(frozen=True)
+class PortfolioDocument:
+    name: str
+    lead: str
+    location: str
+    email: str
+    about: str
+    university: str
+    degree_summary: str
+    semesters: list[SemesterEntry] = field(default_factory=list)
+    skills: list[str] = field(default_factory=list)
+    projects: list[ProjectEntry] = field(default_factory=list)
+    certification: CertificationEntry | None = None
+    contact_text: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "name": self.name,
+            "lead": self.lead,
+            "location": self.location,
+            "email": self.email,
+            "about": self.about,
+            "university": self.university,
+            "degreeSummary": self.degree_summary,
+            "semesters": [sem.to_dict() for sem in self.semesters],
+            "skills": list(self.skills),
+            "projects": [proj.to_dict() for proj in self.projects],
+            "certification": self.certification.to_dict() if self.certification else None,
+            "contactText": self.contact_text,
+        }
